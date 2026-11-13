@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário de Venda</title>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: cabecalho}"></div>
+
+<h1 th:text="${venda.id != null} ? 'Editar Venda' : 'Cadastrar Venda'"></h1>
+
+<!-- 1. Adicionado enctype="multipart/form-data" -->
+<form th:action="@{/vendas/salvar}" th:object="${venda}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}" />
+
+    <p>
+        <label for="data">Data:</label><br>
+        <input type="date" id="data" th:field="*{data}" required />
+    </p>
+    <p>
+        <label for="valor">Valor:</label><br>
+        <input type="text" id="valor" th:field="*{valor}" required />
+    </p>
+    <p>
+        <label for="cliente">cliente:</label><br>
+        <select id="cliente" name="cliente.id" required>
+            <option th:each="cat : ${clientes}"
+                    th:value="${cat.id()}"
+                    th:text="${cat.nome()}"
+                    th:selected="${(venda.cliente() != null and venda.cliente().id() == cat.id())}">
+            </option>
+        </select>
+    </p>
+    <p>
+        <label for="vendedor">vendedor:</label><br>
+        <select id="vendedor" name="vendedor.id" required>
+            <option th:each="cat : ${vendedores}"
+                    th:value="${cat.id()}"
+                    th:text="${cat.nome()}"
+                    th:selected="${(venda.vendedor() != null and venda.vendedor().id() == cat.id())}">
+            </option>
+        </select>
+    </p>
+
+
+    <p>
+        <button type="submit">Salvar</button>
+        <a th:href="@{/vendas}">Cancelar</a>
+    </p>
+</form>
+</body>
+</html>
